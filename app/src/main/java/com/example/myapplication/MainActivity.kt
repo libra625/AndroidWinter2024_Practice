@@ -29,12 +29,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Button for taking a selfie
         binding.takePhotoButton.setOnClickListener {
             takePhoto()
         }
 
-        // Button for sending the email
         binding.sendMailButton.setOnClickListener {
             if (::photoFile.isInitialized) {
                 sendEmailWithAttachment()
@@ -43,7 +41,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Requesting necessary permissions
         if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
             checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
             checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -58,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Handle the result of permission requests
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -68,14 +64,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Method to start the camera
     private fun takePhoto() {
         Log.d("MainActivity", "Reached here")
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(packageManager) != null) {
             try {
-                // Create the image file (this will now update the class-level `photoFile`)
-                photoFile = createImageFile() ?: return  // If null, stop the method early
+                photoFile = createImageFile() ?: return
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error creating file for photo: ${e.message}")
                 Toast.makeText(this, "Error creating photo file", Toast.LENGTH_SHORT).show()
@@ -100,7 +94,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Handle the result of the photo capture
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
@@ -111,13 +104,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Create a file to store the image
     private fun createImageFile(): File? {
         return try {
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             if (storageDir != null && !storageDir.exists()) {
-                storageDir.mkdirs()  // Ensure the directory exists
+                storageDir.mkdirs()
             }
             val imageFile = File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
             Log.d("MainActivity", "File created: ${imageFile.absolutePath}")
@@ -129,7 +121,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Send an email with the selfie as an attachment
     private fun sendEmailWithAttachment() {
         val emailIntent = Intent(Intent.ACTION_SEND).apply {
             type = "application/octet-stream"
