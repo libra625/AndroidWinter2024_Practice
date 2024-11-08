@@ -124,9 +124,9 @@ class MainActivity : AppCompatActivity() {
     private fun sendEmailWithAttachment() {
         val emailIntent = Intent(Intent.ACTION_SEND).apply {
             type = "application/octet-stream"
-            putExtra(Intent.EXTRA_EMAIL, arrayOf("18.12.17.moyo@gmail.com"))
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("hodovychenko@op.edu.ua"))
             putExtra(Intent.EXTRA_SUBJECT, "DigiJED [Turbarov Igor]")
-            putExtra(Intent.EXTRA_TEXT, "Repository link: ")
+            putExtra(Intent.EXTRA_TEXT, "Repository link: https://github.com/libra625/AndroidWinter2024_Practice/tree/main")
             putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this@MainActivity, "${packageName}.fileprovider", photoFile))
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
